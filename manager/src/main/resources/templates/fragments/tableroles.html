@@ -1,0 +1,19 @@
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>No</th>
+<th>Role Name</th>
+<th>Created Date</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+   <tr th:each="r, rowStat: ${role}"
+      >
+        <td th:text="${rowStat.index+1}"></td>
+    <td th:text="${r.roleName}"></td>
+        <td th:text="${r.roleName}"></td>
+        <td><button type="button" class="btn btn-primary">Remove</button> <button type="button" class="btn btn-primary">Edit</button></td>
+    </tr>
+</tbody>
+</table>
