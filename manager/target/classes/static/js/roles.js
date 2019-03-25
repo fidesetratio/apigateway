@@ -1,6 +1,7 @@
 
+
+
 function openRoleDialog(){
-	
 	var form = $("#addrolesform");
 	form.find("input[type=text], textarea").val("");
 	form.find(".help-block").remove();
@@ -11,9 +12,6 @@ function openRoleDialog(){
 }
 
 function submitajax(id){$
-	
-
-	
 	$form = $("#"+id);
 	$groupId = 	 $("#groupId").text();
 	$categoryId =  $("#categoryId").val();
@@ -38,7 +36,10 @@ $.ajax({
       		$form.find(".help-block").remove();
       		$form.find(".has-error").removeClass('.input-icon right has-error');
       		$("#addRoleModal").modal("hide");
-      		
+      		$.get("/role/list-roles",{cat:$categoryId},function(data){
+      			$("#table-panel").html(data);
+      		});
+     		
       	
       	}
       }
@@ -48,14 +49,59 @@ $.ajax({
 
 function oncategoryselect(id){
 	$select = $("#"+id);
-
 	 var category = $select.val();
 	 var display = $select.find("option:selected").text();
 	 if(category!=0){
 		 $("#openAddRole").prop( "disabled", false );
+
 		 $("#groupId").text(display);
 		 $("#categoryId").val(category);
+		 $.get("/role/list-roles",{cat:category},function(data){
+			 $("#table-panel").html(data);
+		 });
+		 
 	 }else if(category == 0){
 		 $("#openAddRole").prop( "disabled", true );
 	 }
+
+
+
+
+}
+
+
+function deleteItem(item){
+	var i = $(item);
+    var entityId = i.attr('data-entity-id');
+    var catid = i.attr('data-cat-entityid');
+    
+    $('.remove_item').attr('data-entity-id', entityId);
+    $('.remove_item').attr('data-cat-entityid', catid);
+
+}
+
+function confirmDelete(item){
+	var i = $(item);
+    var entityId = i.attr('data-entity-id');
+    var catid = i.attr('data-cat-entityid');
+    $.get("/role/delete-role",{roleid:entityId},function(data){
+    	var w = $("#confirmDeleteModal");
+    	w.on("hidden.bs.modal",function(e){
+    		 $.get("/role/list-roles",{cat:catid},function(data){
+    			 $("#table-panel").html(data);
+    		 });
+    		 
+    	})
+    	w.modal("hide");
+    	
+    });
+	
+    
+	
+    
+    /*
+    */
+    
+  
+	return false;
 }
